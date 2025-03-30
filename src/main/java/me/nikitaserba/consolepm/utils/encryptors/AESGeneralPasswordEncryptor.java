@@ -54,7 +54,7 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
     }
 
     @Override
-    public String decrypt(byte[] encryptedPassword) {
+    public String decrypt(byte[] encryptedPassword) throws EncryptionException {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
