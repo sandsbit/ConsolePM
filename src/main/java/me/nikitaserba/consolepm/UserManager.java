@@ -66,6 +66,13 @@ public class UserManager {
         objectMapper.writeValue(usersFile, users);
     }
 
+    public void deleteUser(String username) throws NoSuchUserException, IOException {
+        if (!users.containsKey(username))
+            throw new NoSuchUserException();
+        users.remove(username);
+        objectMapper.writeValue(usersFile, users);
+    }
+
     public void changePassword(String username, String old_password, String new_password) {
         throw new UnsupportedOperationException("Changing user's password is not yet supported.");
     }
