@@ -55,7 +55,7 @@ public class UserManager {
 
     }
 
-    public void newUser(String username, String password) {
+    public void newUser(String username, String password) throws IOException {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             String md5 = new String(md.digest(password.getBytes()));
@@ -63,6 +63,7 @@ public class UserManager {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+        objectMapper.writeValue(usersFile, users);
     }
 
     public void changePassword(String username, String old_password, String new_password) {
