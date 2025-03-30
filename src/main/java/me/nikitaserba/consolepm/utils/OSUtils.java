@@ -6,14 +6,14 @@ import java.util.Locale;
 
 public final class OSUtils {
 
-    private final String APP_DIR_NAME = "consolepm/";
+    private static final String APP_DIR_NAME = "consolepm";
 
     private OSUtils() {}
 
-    public Path getSystemSettingsStorageDirectory() {
+    public static Path getSystemSettingsStorageDirectory() {
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if ((os.contains("mac")) || (os.contains("darwin"))) {
-            return Paths.get(System.getProperty("user.home"), "Library/Application Support");
+            return Paths.get(System.getProperty("user.home"), "Library", "Application Support");
         } else if (os.contains("win")) {
             return Paths.get(System.getenv("APPDATA"));
         }
@@ -21,7 +21,7 @@ public final class OSUtils {
             return Paths.get(System.getProperty("user.home"));
     }
 
-    public Path getAppSettingsStorageDirectory() {
+    public static Path getAppSettingsStorageDirectory() {
         return getSystemSettingsStorageDirectory().resolve(APP_DIR_NAME);
     }
 
