@@ -43,8 +43,20 @@ public class MainCLI {
         return PasswordManager.authenticate(username, password1);
     }
 
-    private static PasswordManager login() {
-
+    private static PasswordManager login() throws EncryptionException, IOException {
+        while (true) {
+            String username = askForReply("Enter your username: ");
+            String password = askForReplySecure("Enter your password: ");
+            try {
+                var pm = PasswordManager.authenticate(username, password);
+                if (pm == null)
+                    System.out.println("Invalid password!");
+                else
+                    return pm;
+            } catch (NoSuchUserException _) {
+                System.out.println("Invalid username!");
+            }
+        }
     }
 
     private static void accountListInterface(PasswordManager passwordManager) {
