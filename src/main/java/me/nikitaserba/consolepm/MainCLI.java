@@ -98,24 +98,19 @@ public class MainCLI {
             System.out.print(messageAtTheEnd);
             answer = scanner.nextInt();
         } while (answer <= 0 || answer > options.length);
-        scanner.close();
         return answer;
     }
 
     private static boolean yesNoQuestion(String message) {
         System.out.print(message + " (y/n)");
         Scanner scanner = new Scanner(System.in);
-        boolean yes = scanner.next().toLowerCase().equals("y");
-        scanner.close();
-        return yes;
+        return scanner.next().toLowerCase().equals("y");
     }
 
     private static String askForReply(String message) {
         System.out.print(message);
         Scanner scanner = new Scanner(System.in);
-        String answer = scanner.next();
-        scanner.close();
-        return answer;
+        return scanner.next();
     }
 
     private static String askForReplySecure(String message) {
