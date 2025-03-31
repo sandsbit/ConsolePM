@@ -89,7 +89,7 @@ public class MainCLI {
 
     private static int choose(String messageAtTheEnd, String... options) {
         for (int i = 0; i < options.length; i++) {
-            System.out.println(String.valueOf(i) + " - " + options[i]);
+            System.out.println(String.valueOf(i+1) + " - " + options[i]);
         }
 
         Scanner scanner = new Scanner(System.in);
