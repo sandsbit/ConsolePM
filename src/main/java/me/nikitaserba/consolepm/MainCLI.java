@@ -1,10 +1,13 @@
 package me.nikitaserba.consolepm;
 
 
+import me.nikitaserba.consolepm.utils.Account;
 import me.nikitaserba.consolepm.utils.EncryptionException;
 import me.nikitaserba.consolepm.utils.NoSuchUserException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainCLI {
 
@@ -59,8 +62,26 @@ public class MainCLI {
         }
     }
 
-    private static void accountListInterface(PasswordManager passwordManager) {
+    private static void accountListInterface(PasswordManager passwordManager) throws EncryptionException {
+        List<String> accounts = passwordManager.getAccountsNames();
+        while (true) {
+            var options = new ArrayList<>(accounts);
+            options.add("Quit");
+            int answer = choose("Choose account data to view: ", options.toArray(new String[0]));
 
+            if (answer == options.size())
+                System.exit(0);
+
+            printAccount(passwordManager.getAccountData(accounts.get(answer)), passwordManager);
+        }
+    }
+
+    private static void printAccount(Account account, PasswordManager passwordManager) throws EncryptionException {
+        System.out.println("Name: " + account.getName());
+        System.out.println("Username: " + account.getUsername());
+        System.out.println("Email: " + account.getEmail());
+        System.out.println("Data created: " + account.getCreated().toString());
+        System.out.println("Password: " + passwordManager.decryptPassword(account.getPasswordEncrypted()));
     }
 
     private static int choose(String messageAtTheEnd, String... options) {
