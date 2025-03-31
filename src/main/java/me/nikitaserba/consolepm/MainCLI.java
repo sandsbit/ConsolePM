@@ -5,9 +5,12 @@ import me.nikitaserba.consolepm.utils.Account;
 import me.nikitaserba.consolepm.utils.EncryptionException;
 import me.nikitaserba.consolepm.utils.NoSuchUserException;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class MainCLI {
 
@@ -85,18 +88,38 @@ public class MainCLI {
     }
 
     private static int choose(String messageAtTheEnd, String... options) {
+        for (int i = 0; i < options.length; i++) {
+            System.out.println(String.valueOf(i) + " - " + options[i]);
+        }
 
+        Scanner scanner = new Scanner(System.in);
+        int answer;
+        do {
+            System.out.print(messageAtTheEnd);
+            answer = scanner.nextInt();
+        } while (answer <= 0 || answer > options.length);
+        scanner.close();
+        return answer;
     }
 
     private static boolean yesNoQuestion(String message) {
-
+        System.out.print(message + " (y/n)");
+        Scanner scanner = new Scanner(System.in);
+        boolean yes = scanner.next().toLowerCase().equals("y");
+        scanner.close();
+        return yes;
     }
 
     private static String askForReply(String message) {
-
+        System.out.print(message);
+        Scanner scanner = new Scanner(System.in);
+        String answer = scanner.next();
+        scanner.close();
+        return answer;
     }
 
     private static String askForReplySecure(String message) {
-
+        System.out.print(message);
+        return Arrays.toString(System.console().readPassword());
     }
 }
