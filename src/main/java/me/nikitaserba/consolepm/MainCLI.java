@@ -116,7 +116,7 @@ public class MainCLI {
     private static boolean yesNoQuestion(String message) {
         System.out.print(message + " (y/n)");
         Scanner scanner = new Scanner(System.in);
-        return scanner.next().toLowerCase().equals("y");
+        return scanner.next().equalsIgnoreCase("y");
     }
 
     private static String askForReply(String message) {
