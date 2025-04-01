@@ -44,7 +44,7 @@ public class PasswordManager {
     }
 
     public List<String> getAccountsNames() {
-        return accounts.stream().map(Account::getUsername).collect(Collectors.toList());
+        return accounts.stream().map(Account::getName).collect(Collectors.toList());
     }
 
     public Account getAccountData(String name) {
