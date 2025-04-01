@@ -102,6 +102,9 @@ public class MainCLI {
         System.out.println("Password: " + passwordManager.decryptPassword(account.getPasswordEncrypted()));
     }
 
+    /**
+     * Prints list and asks user to choose one option.
+     */
     private static int choose(String messageAtTheEnd, String... options) {
         for (int i = 0; i < options.length; i++) {
             System.out.println(String.valueOf(i+1) + " - " + options[i]);
@@ -116,18 +119,30 @@ public class MainCLI {
         return answer;
     }
 
+    /**
+     * Asks a yes/no question with message, adding "(y/n) to it.
+     * @return true if answer is y or Y
+     */
     private static boolean yesNoQuestion(String message) {
         System.out.print(message + " (y/n)");
         Scanner scanner = new Scanner(System.in);
         return scanner.next().equalsIgnoreCase("y");
     }
 
+    /**
+     * Just print message and ask for input.
+     */
     private static String askForReply(String message) {
         System.out.print(message);
         Scanner scanner = new Scanner(System.in);
         return scanner.next();
     }
 
+    /**
+     * Print message and ask for input that will be hidden.
+     *
+     * Doesn't work in Jetbrains' console.
+     */
     private static String askForReplySecure(String message) {
         System.out.print(message);
         return new String(System.console().readPassword());

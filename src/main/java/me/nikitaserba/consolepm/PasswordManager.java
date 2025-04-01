@@ -22,7 +22,7 @@ public class PasswordManager {
     private final String password;  // TODO: Remove final when adding password change
 
     File userPasswordsFile;
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;  // JSON mapper
     private PasswordEncryptor passwordEncryptor;
     private List<Account> accounts;
 
@@ -38,6 +38,11 @@ public class PasswordManager {
         this.passwordEncryptor = new AESGeneralPasswordEncryptor(password);
     }
 
+    /**
+     * Returns new PasswordManager instance, but only if password is correct.
+     *
+     * Password is checked by its md5 sum, this doesn't guarantee that key works for decryption.
+     */
     public static PasswordManager authenticate(String username, String password) throws NoSuchUserException,
             IOException, EncryptionException, InvalidPasswordException {
         if (userManager.checkPassword(username, password))

@@ -12,6 +12,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * Singleton class for working with users.
+ */
 public class UserManager {
 
     private static final UserManager instance = new UserManager();
