@@ -5,12 +5,8 @@ import me.nikitaserba.consolepm.utils.Account;
 import me.nikitaserba.consolepm.utils.EncryptionException;
 import me.nikitaserba.consolepm.utils.NoSuchUserException;
 
-import java.io.Console;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class MainCLI {
 
@@ -65,18 +61,34 @@ public class MainCLI {
         }
     }
 
-    private static void accountListInterface(PasswordManager passwordManager) throws EncryptionException {
-        List<String> accounts = passwordManager.getAccountsNames();
+    private static void accountListInterface(PasswordManager passwordManager) throws EncryptionException, IOException {
         while (true) {
+            List<String> accounts = passwordManager.getAccountsNames();
             var options = new ArrayList<>(accounts);
+            options.add("Add new");
             options.add("Quit");
             int answer = choose("Choose account data to view: ", options.toArray(new String[0]));
+
+            if (answer == options.size()-1) {
+                addNewAccount(passwordManager);
+                continue;
+            }
 
             if (answer == options.size())
                 System.exit(0);
 
-            printAccount(passwordManager.getAccountData(accounts.get(answer)), passwordManager);
+            printAccount(passwordManager.getAccountData(accounts.get(answer-1)), passwordManager);
         }
+    }
+
+    private static void addNewAccount(PasswordManager passwordManager) throws EncryptionException, IOException {
+        String name = askForReply("Your new account name: ");
+        String username = askForReply("Your new account username: ");
+        String email = askForReply("Your new account email: ");
+        String password = askForReplySecure("Your new account password: ");
+        Date created = new Date();
+
+        passwordManager.addAccount(new Account(name, username, email, null, created), password);
     }
 
     private static void printAccount(Account account, PasswordManager passwordManager) throws EncryptionException {
