@@ -14,7 +14,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Base64;
 
 public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
 
@@ -46,7 +45,7 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
-            return cipher.doFinal(password.getBytes());
+            return cipher.doFinal(password.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException |
                  InvalidKeyException | InvalidAlgorithmParameterException e) {
             throw new EncryptionException(e);
@@ -58,7 +57,7 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
-            return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedPassword)));
+            return new String(cipher.doFinal(encryptedPassword), StandardCharsets.UTF_8);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException |
                  InvalidKeyException | InvalidAlgorithmParameterException e) {
             throw new EncryptionException(e);
