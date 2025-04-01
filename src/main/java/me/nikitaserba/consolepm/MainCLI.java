@@ -95,7 +95,7 @@ public class MainCLI {
         System.out.println("Name: " + account.getName());
         System.out.println("Username: " + account.getUsername());
         System.out.println("Email: " + account.getEmail());
-        System.out.println("Data created: " + account.getCreated().toString());
+        System.out.println("Date created: " + account.getCreated().toString());
         System.out.println("Password: " + passwordManager.decryptPassword(account.getPasswordEncrypted()));
     }
 
