@@ -19,12 +19,11 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
 
     private final String SALT = "ILikeToEatFood666";
     private final String SECRET_KEY_FACTORY = "PBKDF2WithHmacSHA256";
-    private final String ALGORITHM = "AES/GCM/NoPadding";
+    private final String ALGORITHM = "AES";
     private final int ITERATIONS = 65536;
     private final int KEY_LENGTH = 256;
 
     private final SecretKey secretKey;
-    private final GCMParameterSpec gcmParameterSpec;
 
     public AESGeneralPasswordEncryptor(String password) throws EncryptionException {
         try {
@@ -34,7 +33,6 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
 
             byte[] iv = new byte[12];
             new SecureRandom().nextBytes(iv);
-            gcmParameterSpec = new GCMParameterSpec(128, iv);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new EncryptionException(e);
         }
@@ -44,10 +42,10 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
     public byte[] encrypt(String password) throws EncryptionException {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmParameterSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             return cipher.doFinal(password.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException |
-                 InvalidKeyException | InvalidAlgorithmParameterException e) {
+                 InvalidKeyException e) {
             throw new EncryptionException(e);
         }
     }
@@ -56,10 +54,10 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
     public String decrypt(byte[] encryptedPassword) throws EncryptionException {
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, gcmParameterSpec);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(encryptedPassword), StandardCharsets.UTF_8);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException |
-                 InvalidKeyException | InvalidAlgorithmParameterException e) {
+                 InvalidKeyException e) {
             throw new EncryptionException(e);
         }
     }
