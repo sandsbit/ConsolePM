@@ -127,6 +127,6 @@ public class MainCLI {
 
     private static String askForReplySecure(String message) {
         System.out.print(message);
-        return Arrays.toString(System.console().readPassword());
+        return new String(System.console().readPassword());
     }
 }
