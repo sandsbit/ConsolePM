@@ -1,3 +1,3 @@
-package me.nikitaserba.consolepm.utils;
+package me.nikitaserba.consolepm.utils.exceptions;
 
 public class NoSuchUserException extends Exception{}

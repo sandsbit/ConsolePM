@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.nikitaserba.consolepm.utils.*;
 import me.nikitaserba.consolepm.utils.encryptors.AESGeneralPasswordEncryptor;
+import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
+import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
+import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +39,11 @@ public class PasswordManager {
     }
 
     public static PasswordManager authenticate(String username, String password) throws NoSuchUserException,
-                                                                                    IOException, EncryptionException {
+            IOException, EncryptionException, InvalidPasswordException {
         if (userManager.checkPassword(username, password))
             return new PasswordManager(username, password);
         else
-            return null;
+            throw new InvalidPasswordException();
     }
 
     public List<String> getAccountsNames() {

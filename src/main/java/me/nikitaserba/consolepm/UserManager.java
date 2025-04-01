@@ -2,7 +2,7 @@ package me.nikitaserba.consolepm;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.nikitaserba.consolepm.utils.NoSuchUserException;
+import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
 import me.nikitaserba.consolepm.utils.OSUtils;
 
 import java.io.File;

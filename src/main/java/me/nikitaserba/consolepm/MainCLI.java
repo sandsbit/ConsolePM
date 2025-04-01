@@ -2,8 +2,9 @@ package me.nikitaserba.consolepm;
 
 
 import me.nikitaserba.consolepm.utils.Account;
-import me.nikitaserba.consolepm.utils.EncryptionException;
-import me.nikitaserba.consolepm.utils.NoSuchUserException;
+import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
+import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
+import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
 
 import java.io.IOException;
 import java.util.*;
@@ -22,14 +23,16 @@ public class MainCLI {
         System.out.println("Welcome to ConsolePM!");
     }
 
-    private static PasswordManager authenticate() throws IOException, EncryptionException, NoSuchUserException {
+    private static PasswordManager authenticate() throws IOException, EncryptionException, NoSuchUserException,
+            InvalidPasswordException {
         if (yesNoQuestion("Do you want to login to an existing account?"))
             return login();
         else
             return register();
     }
 
-    private static PasswordManager register() throws IOException, EncryptionException, NoSuchUserException {
+    private static PasswordManager register() throws IOException, EncryptionException,
+            NoSuchUserException, InvalidPasswordException {
         String username, password1, password2;
         while (true) {
             username = askForReply("Enter your new username: ");
@@ -55,8 +58,8 @@ public class MainCLI {
                     System.out.println("Invalid password!");
                 else
                     return pm;
-            } catch (NoSuchUserException _) {
-                System.out.println("Invalid username!");
+            } catch (NoSuchUserException | InvalidPasswordException _) {
+                System.out.println("Invalid username or password!");
             }
         }
     }

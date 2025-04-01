@@ -1,6 +1,6 @@
 package me.nikitaserba.consolepm.utils.encryptors;
 
-import me.nikitaserba.consolepm.utils.EncryptionException;
+import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
 import me.nikitaserba.consolepm.utils.PasswordEncryptor;
 
 import javax.crypto.*;

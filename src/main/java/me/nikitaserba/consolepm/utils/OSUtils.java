@@ -10,6 +10,12 @@ public final class OSUtils {
 
     private OSUtils() {}
 
+    /**
+     * Returns OS-specific path where apps store their data:
+     * - %AppData% for Windows
+     * - User's Application Support for macOS
+     * - home dir for linux
+     */
     public static Path getSystemSettingsStorageDirectory() {
         String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if ((os.contains("mac")) || (os.contains("darwin"))) {
