@@ -9,7 +9,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
@@ -28,9 +27,6 @@ public class AESGeneralPasswordEncryptor implements PasswordEncryptor {
             SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_FACTORY);
             KeySpec spec = new PBEKeySpec(password.toCharArray(), SALT.getBytes(), ITERATIONS, KEY_LENGTH);
             secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
-
-            byte[] iv = new byte[12];
-            new SecureRandom().nextBytes(iv);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new EncryptionException(e);
         }
