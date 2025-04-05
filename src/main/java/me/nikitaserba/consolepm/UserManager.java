@@ -39,6 +39,7 @@ public class UserManager {
     }
 
     private UserManager(DataManager dataManager) throws IOException {
+        this.dataManager = dataManager;
         objectMapper = new ObjectMapper();
         String usersData = dataManager.get(DATA_KEY);
         if (usersData.isEmpty()) {
