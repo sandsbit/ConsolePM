@@ -64,11 +64,7 @@ public class MainCLI {
             String username = askForReply("Enter your username: ");
             String password = askForReplySecure("Enter your password: ");
             try {
-                var pm = PasswordManager.authenticate(username, password);
-                if (pm == null)
-                    System.out.println("Invalid password!");
-                else
-                    return pm;
+                return PasswordManager.authenticate(dataManager, username, password);
             } catch (NoSuchUserException | InvalidPasswordException _) {
                 System.out.println("Invalid username or password!");
             }
