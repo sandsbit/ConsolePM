@@ -8,7 +8,6 @@ import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
 import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

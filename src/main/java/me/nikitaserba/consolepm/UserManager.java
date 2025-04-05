@@ -1,14 +1,10 @@
 package me.nikitaserba.consolepm;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.nikitaserba.consolepm.utils.DataManager;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
-import me.nikitaserba.consolepm.utils.OSUtils;
 
-import javax.xml.crypto.Data;
-import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
