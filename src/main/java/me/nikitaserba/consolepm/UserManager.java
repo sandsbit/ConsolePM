@@ -1,10 +1,13 @@
 package me.nikitaserba.consolepm;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.nikitaserba.consolepm.utils.DataManager;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
 import me.nikitaserba.consolepm.utils.OSUtils;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -18,31 +21,30 @@ import java.util.Map;
  */
 public class UserManager {
 
-    private static final UserManager instance = new UserManager();
-    public static UserManager getInstance() {
-        return instance;
-    }
-
-
-    private static final String USERS_FILENAME = "users.json";
-    private final File usersFile;
+    private DataManager dataManager;
     private final ObjectMapper objectMapper;
     private Map<String, String> users;
 
-    private UserManager() {
+    private final String DATA_KEY = "users";
+
+    private static HashMap<DataManager, UserManager> instances = new HashMap<>();
+    public static UserManager getInstance(DataManager dataManager) throws IOException {
+        if (instances.containsKey(dataManager)) {
+            return instances.get(dataManager);
+        } else {
+           var userManager = new UserManager(dataManager);
+           instances.put(dataManager, userManager);
+           return userManager;
+        }
+    }
+
+    private UserManager(DataManager dataManager) throws IOException {
         objectMapper = new ObjectMapper();
-        usersFile = OSUtils.getAppSettingsStorageDirectory().resolve(USERS_FILENAME).toFile();
-        if (!usersFile.exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            OSUtils.getAppSettingsStorageDirectory().toFile().mkdirs();
+        String usersData = dataManager.get(DATA_KEY);
+        if (usersData.isEmpty()) {
             users = new HashMap<>();
         } else {
-            try {
-                users = objectMapper.readValue(usersFile, new TypeReference<>() {});
-            } catch (IOException e) {
-                System.out.println("Error while reading user data: " + e.getMessage());
-                System.exit(1);
-            }
+            users = objectMapper.readValue(usersData, new TypeReference<>() {});
         }
     }
 
@@ -67,14 +69,14 @@ public class UserManager {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        objectMapper.writeValue(usersFile, users);
+        dataManager.save(DATA_KEY, objectMapper.writeValueAsString(users));
     }
 
     public void deleteUser(String username) throws NoSuchUserException, IOException {
         if (!users.containsKey(username))
             throw new NoSuchUserException();
         users.remove(username);
-        objectMapper.writeValue(usersFile, users);
+        dataManager.save(DATA_KEY, objectMapper.writeValueAsString(users));
     }
 
     public void changePassword(String username, String old_password, String new_password) {

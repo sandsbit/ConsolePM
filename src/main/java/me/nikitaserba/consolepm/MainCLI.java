@@ -2,6 +2,8 @@ package me.nikitaserba.consolepm;
 
 
 import me.nikitaserba.consolepm.utils.Account;
+import me.nikitaserba.consolepm.utils.DataManager;
+import me.nikitaserba.consolepm.utils.FileDataManager;
 import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
 import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
@@ -11,7 +13,16 @@ import java.util.*;
 
 public class MainCLI {
 
-    private static final UserManager userManager = UserManager.getInstance();
+    private static final DataManager dataManager = new FileDataManager();
+    private static final UserManager userManager;
+
+    static {
+        try {
+            userManager = UserManager.getInstance(dataManager);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         printWelcome();
@@ -45,7 +56,7 @@ public class MainCLI {
         }
 
         userManager.newUser(username, password1);
-        return PasswordManager.authenticate(username, password1);
+        return PasswordManager.authenticate(new FileDataManager(), username, password1);
     }
 
     private static PasswordManager login() throws EncryptionException, IOException {
