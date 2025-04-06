@@ -1,6 +1,8 @@
 package me.nikitaserba.consolepm.utils;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class Account {
 
@@ -60,5 +62,17 @@ public class Account {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(getName(), account.getName()) && Objects.equals(getUsername(), account.getUsername()) && Objects.equals(getEmail(), account.getEmail()) && Objects.deepEquals(getPasswordEncrypted(), account.getPasswordEncrypted()) && Objects.equals(getCreated(), account.getCreated());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getUsername(), getEmail(), Arrays.hashCode(getPasswordEncrypted()), getCreated());
     }
 }

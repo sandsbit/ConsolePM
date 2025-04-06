@@ -8,7 +8,6 @@ import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
 import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +15,20 @@ import java.util.stream.Collectors;
 
 public class PasswordManager {
 
-    private static final UserManager userManager = UserManager.getInstance();
+    private final DataManager dataManager;
 
     private final String username;
     private final String password;  // TODO: Remove final when adding password change
 
-    File userPasswordsFile;
-    private ObjectMapper objectMapper;  // JSON mapper
-    private PasswordEncryptor passwordEncryptor;
+    private final ObjectMapper objectMapper;  // JSON mapper
+    private final PasswordEncryptor passwordEncryptor;
     private List<Account> accounts;
 
-    private PasswordManager(String username, String password) throws IOException, EncryptionException {
+    private PasswordManager(DataManager dataManager, String username, String password) throws IOException,
+            EncryptionException {
+        this.dataManager = dataManager;
         this.username = username;
         this.password = password;
-
-        this.userPasswordsFile = OSUtils.getAppSettingsStorageDirectory().resolve(username + ".json").toFile();
 
         this.objectMapper = new ObjectMapper();
         loadAccounts();
@@ -43,10 +41,12 @@ public class PasswordManager {
      *
      * Password is checked by its md5 sum, this doesn't guarantee that key works for decryption.
      */
-    public static PasswordManager authenticate(String username, String password) throws NoSuchUserException,
-            IOException, EncryptionException, InvalidPasswordException {
+    public static PasswordManager authenticate(DataManager dataManager, String username,
+                                               String password) throws NoSuchUserException, IOException,
+            EncryptionException, InvalidPasswordException {
+        var userManager = UserManager.getInstance(dataManager);
         if (userManager.checkPassword(username, password))
-            return new PasswordManager(username, password);
+            return new PasswordManager(dataManager, username, password);
         else
             throw new InvalidPasswordException();
     }
@@ -83,14 +83,14 @@ public class PasswordManager {
     }
 
     private void loadAccounts() throws IOException {
-        if (!userPasswordsFile.exists())
+        String accountsData = dataManager.get(username);
+        if (accountsData.isEmpty())
             this.accounts = new ArrayList<>();
         else
-            this.accounts = objectMapper.readValue(userPasswordsFile, new TypeReference<>() {});
+            this.accounts = objectMapper.readValue(accountsData, new TypeReference<>() {});
     }
 
     private void saveAccounts() throws IOException {
-        userPasswordsFile.getParentFile().mkdirs();
-        objectMapper.writeValue(userPasswordsFile, accounts);
+        dataManager.save(username, objectMapper.writeValueAsString(accounts));
     }
 }

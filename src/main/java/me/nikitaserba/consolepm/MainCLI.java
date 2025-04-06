@@ -2,16 +2,33 @@ package me.nikitaserba.consolepm;
 
 
 import me.nikitaserba.consolepm.utils.Account;
+import me.nikitaserba.consolepm.utils.DataManager;
+import me.nikitaserba.consolepm.utils.FileDataManager;
 import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
 import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
+import me.nikitaserba.consolepm.utils.exceptions.UserAlreadyExistsException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.*;
 
 public class MainCLI {
 
-    private static final UserManager userManager = UserManager.getInstance();
+    protected static InputStream in = System.in;
+    protected static PrintStream out = System.out;
+
+    private static final DataManager dataManager = new FileDataManager();
+    private static final UserManager userManager;
+
+    static {
+        try {
+            userManager = UserManager.getInstance(dataManager);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         printWelcome();
@@ -20,7 +37,7 @@ public class MainCLI {
     }
 
     private static void printWelcome() {
-        System.out.println("Welcome to ConsolePM!");
+        out.println("Welcome to ConsolePM!");
     }
 
     private static PasswordManager authenticate() throws IOException, EncryptionException, NoSuchUserException,
@@ -41,11 +58,16 @@ public class MainCLI {
             if (password1.equals(password2))
                 break;
             else
-                System.out.println("Passwords do not match! Try again.");
+                out.println("Passwords do not match! Try again.");
+
+            try {
+                userManager.newUser(username, password1);
+            } catch (UserAlreadyExistsException e) {
+                out.println("User already exists! Try again.");
+            }
         }
 
-        userManager.newUser(username, password1);
-        return PasswordManager.authenticate(username, password1);
+        return PasswordManager.authenticate(new FileDataManager(), username, password1);
     }
 
     private static PasswordManager login() throws EncryptionException, IOException {
@@ -53,13 +75,9 @@ public class MainCLI {
             String username = askForReply("Enter your username: ");
             String password = askForReplySecure("Enter your password: ");
             try {
-                var pm = PasswordManager.authenticate(username, password);
-                if (pm == null)
-                    System.out.println("Invalid password!");
-                else
-                    return pm;
+                return PasswordManager.authenticate(dataManager, username, password);
             } catch (NoSuchUserException | InvalidPasswordException _) {
-                System.out.println("Invalid username or password!");
+                out.println("Invalid username or password!");
             }
         }
     }
@@ -95,46 +113,46 @@ public class MainCLI {
     }
 
     private static void printAccount(Account account, PasswordManager passwordManager) throws EncryptionException {
-        System.out.println("Name: " + account.getName());
-        System.out.println("Username: " + account.getUsername());
-        System.out.println("Email: " + account.getEmail());
-        System.out.println("Date created: " + account.getCreated().toString());
-        System.out.println("Password: " + passwordManager.decryptPassword(account.getPasswordEncrypted()));
+        out.println("Name: " + account.getName());
+        out.println("Username: " + account.getUsername());
+        out.println("Email: " + account.getEmail());
+        out.println("Date created: " + account.getCreated().toString());
+        out.println("Password: " + passwordManager.decryptPassword(account.getPasswordEncrypted()));
     }
 
     /**
      * Prints list and asks user to choose one option.
      */
-    private static int choose(String messageAtTheEnd, String... options) {
+    protected static int choose(String messageAtTheEnd, String... options) {
         for (int i = 0; i < options.length; i++) {
-            System.out.println(String.valueOf(i+1) + " - " + options[i]);
+            out.println((i + 1) + " - " + options[i]);
         }
 
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(in);
         int answer;
         do {
-            System.out.print(messageAtTheEnd);
+            out.print(messageAtTheEnd);
             answer = scanner.nextInt();
         } while (answer <= 0 || answer > options.length);
         return answer;
     }
 
     /**
-     * Asks a yes/no question with message, adding "(y/n) to it.
+     * Asks a yes/no question with message, adding "(y/n)" to it.
      * @return true if answer is y or Y
      */
-    private static boolean yesNoQuestion(String message) {
-        System.out.print(message + " (y/n)");
-        Scanner scanner = new Scanner(System.in);
+    protected static boolean yesNoQuestion(String message) {
+        out.print(message + " (y/n)");
+        Scanner scanner = new Scanner(in);
         return scanner.next().equalsIgnoreCase("y");
     }
 
     /**
      * Just print message and ask for input.
      */
-    private static String askForReply(String message) {
-        System.out.print(message);
-        Scanner scanner = new Scanner(System.in);
+    protected static String askForReply(String message) {
+        out.print(message);
+        Scanner scanner = new Scanner(in);
         return scanner.next();
     }
 
@@ -143,8 +161,8 @@ public class MainCLI {
      *
      * Doesn't work in Jetbrains' console.
      */
-    private static String askForReplySecure(String message) {
-        System.out.print(message);
+    protected static String askForReplySecure(String message) {
+        out.print(message);
         return new String(System.console().readPassword());
     }
 }
