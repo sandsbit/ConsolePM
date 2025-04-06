@@ -2,6 +2,7 @@ package me.nikitaserba.consolepm;
 
 import me.nikitaserba.consolepm.utils.MemoryDataManager;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
+import me.nikitaserba.consolepm.utils.exceptions.UserAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +20,7 @@ class UserManagerTest {
     }
 
     @Test
-    void createNewUser() throws IOException, NoSuchUserException {
+    void createNewUser() throws IOException, NoSuchUserException, UserAlreadyExistsException {
         userManager.newUser("testuser", "testpassword");
 
         assertTrue(userManager.checkPassword("testuser", "testpassword"),
@@ -27,5 +28,6 @@ class UserManagerTest {
         assertFalse(userManager.checkPassword("testuser", "test"),
                 "True was given for false password");
         assertThrows(NoSuchUserException.class, () -> userManager.checkPassword("testuser2", ""));
+        assertThrows(UserAlreadyExistsException.class, () -> userManager.newUser("testuser", "testpassword2"));
     }
 }
