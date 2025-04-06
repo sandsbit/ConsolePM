@@ -123,7 +123,7 @@ public class MainCLI {
     /**
      * Prints list and asks user to choose one option.
      */
-    private static int choose(String messageAtTheEnd, String... options) {
+    protected static int choose(String messageAtTheEnd, String... options) {
         for (int i = 0; i < options.length; i++) {
             out.println(String.valueOf(i+1) + " - " + options[i]);
         }
@@ -141,7 +141,7 @@ public class MainCLI {
      * Asks a yes/no question with message, adding "(y/n) to it.
      * @return true if answer is y or Y
      */
-    private static boolean yesNoQuestion(String message) {
+    protected static boolean yesNoQuestion(String message) {
         out.print(message + " (y/n)");
         Scanner scanner = new Scanner(in);
         return scanner.next().equalsIgnoreCase("y");
@@ -150,7 +150,7 @@ public class MainCLI {
     /**
      * Just print message and ask for input.
      */
-    private static String askForReply(String message) {
+    protected static String askForReply(String message) {
         out.print(message);
         Scanner scanner = new Scanner(in);
         return scanner.next();
@@ -161,7 +161,7 @@ public class MainCLI {
      *
      * Doesn't work in Jetbrains' console.
      */
-    private static String askForReplySecure(String message) {
+    protected static String askForReplySecure(String message) {
         out.print(message);
         return new String(System.console().readPassword());
     }
