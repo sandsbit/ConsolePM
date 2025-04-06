@@ -7,6 +7,7 @@ import me.nikitaserba.consolepm.utils.FileDataManager;
 import me.nikitaserba.consolepm.utils.exceptions.EncryptionException;
 import me.nikitaserba.consolepm.utils.exceptions.InvalidPasswordException;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
+import me.nikitaserba.consolepm.utils.exceptions.UserAlreadyExistsException;
 
 import java.io.IOException;
 import java.util.*;
@@ -53,9 +54,14 @@ public class MainCLI {
                 break;
             else
                 System.out.println("Passwords do not match! Try again.");
+
+            try {
+                userManager.newUser(username, password1);
+            } catch (UserAlreadyExistsException e) {
+                System.out.println("User already exists! Try again.");
+            }
         }
 
-        userManager.newUser(username, password1);
         return PasswordManager.authenticate(new FileDataManager(), username, password1);
     }
 

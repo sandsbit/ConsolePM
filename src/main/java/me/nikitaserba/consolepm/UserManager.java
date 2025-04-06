@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.nikitaserba.consolepm.utils.DataManager;
 import me.nikitaserba.consolepm.utils.exceptions.NoSuchUserException;
+import me.nikitaserba.consolepm.utils.exceptions.UserAlreadyExistsException;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -58,8 +59,10 @@ public class UserManager {
 
     }
 
-    public void newUser(String username, String password) throws IOException {
+    public void newUser(String username, String password) throws IOException, UserAlreadyExistsException {
         try {
+            if (users.containsKey(username))
+                throw new UserAlreadyExistsException();
             MessageDigest md = MessageDigest.getInstance("MD5");
             String md5 = new String(md.digest(password.getBytes()));
             users.put(username, md5);
