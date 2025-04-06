@@ -125,7 +125,7 @@ public class MainCLI {
      */
     protected static int choose(String messageAtTheEnd, String... options) {
         for (int i = 0; i < options.length; i++) {
-            out.println(String.valueOf(i+1) + " - " + options[i]);
+            out.println((i + 1) + " - " + options[i]);
         }
 
         Scanner scanner = new Scanner(in);
@@ -138,7 +138,7 @@ public class MainCLI {
     }
 
     /**
-     * Asks a yes/no question with message, adding "(y/n) to it.
+     * Asks a yes/no question with message, adding "(y/n)" to it.
      * @return true if answer is y or Y
      */
     protected static boolean yesNoQuestion(String message) {

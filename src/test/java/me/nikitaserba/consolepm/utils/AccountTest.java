@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +32,7 @@ class AccountTest {
     }
 
     @Test
-    void differentEqualsAndHashCodeTest() {
+    void differentEqualsAndHashCodeTest() throws InterruptedException {
         Date date1 = new Date();
         Account account = new Account("Test", "nikita", "nikitaserba@icloud.com",
                 new byte[] {0x16, 0x12}, date1);
@@ -43,6 +44,7 @@ class AccountTest {
                 new byte[] {0x16, 0x12}, date1);
         Account account5 = new Account("Test", "nikita", "nikitaserba@icloud.com",
                 new byte[] {0x16, 0x1F}, date1);
+        TimeUnit.SECONDS.sleep(1);
         Account account6 = new Account("Test", "nikita", "nikitaserba@icloud.com",
                 new byte[] {0x16, 0x12}, new Date());
 

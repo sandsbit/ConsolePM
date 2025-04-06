@@ -18,13 +18,13 @@ import java.util.Map;
  */
 public class UserManager {
 
-    private DataManager dataManager;
+    private final DataManager dataManager;
     private final ObjectMapper objectMapper;
-    private Map<String, String> users;
+    private final Map<String, String> users;
 
     private final String DATA_KEY = "users";
 
-    private static HashMap<DataManager, UserManager> instances = new HashMap<>();
+    private static final HashMap<DataManager, UserManager> instances = new HashMap<>();
     public static UserManager getInstance(DataManager dataManager) throws IOException {
         if (instances.containsKey(dataManager)) {
             return instances.get(dataManager);

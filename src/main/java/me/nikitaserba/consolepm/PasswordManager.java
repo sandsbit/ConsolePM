@@ -15,20 +15,18 @@ import java.util.stream.Collectors;
 
 public class PasswordManager {
 
-    private final UserManager userManager;
     private final DataManager dataManager;
 
     private final String username;
     private final String password;  // TODO: Remove final when adding password change
 
-    private ObjectMapper objectMapper;  // JSON mapper
-    private PasswordEncryptor passwordEncryptor;
+    private final ObjectMapper objectMapper;  // JSON mapper
+    private final PasswordEncryptor passwordEncryptor;
     private List<Account> accounts;
 
-    private PasswordManager(DataManager dataManager, UserManager userManager, String username, String password) throws IOException,
+    private PasswordManager(DataManager dataManager, String username, String password) throws IOException,
             EncryptionException {
         this.dataManager = dataManager;
-        this.userManager = userManager;
         this.username = username;
         this.password = password;
 
@@ -48,7 +46,7 @@ public class PasswordManager {
             EncryptionException, InvalidPasswordException {
         var userManager = UserManager.getInstance(dataManager);
         if (userManager.checkPassword(username, password))
-            return new PasswordManager(dataManager, userManager, username, password);
+            return new PasswordManager(dataManager, username, password);
         else
             throw new InvalidPasswordException();
     }

@@ -10,6 +10,7 @@ public class FileDataManager implements DataManager {
 
     public FileDataManager() {
         appSettingsFolder = OSUtils.getAppSettingsStorageDirectory();
+        //noinspection ResultOfMethodCallIgnored
         appSettingsFolder.toFile().mkdirs();
     }
 

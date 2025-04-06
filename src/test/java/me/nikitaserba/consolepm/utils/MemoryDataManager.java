@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class MemoryDataManager implements DataManager {
 
-    private Map<String, String> data;
+    private final Map<String, String> data;
 
     public MemoryDataManager() {
         data = new HashMap<>();
